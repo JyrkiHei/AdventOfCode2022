@@ -1,24 +1,50 @@
-console.log('Try npm run lint/fix!');
+import fs = require('fs');
+import readline = require('readline');
 
-const longString =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut aliquet diam.';
+const rl = readline.createInterface({
+  input: fs.createReadStream('./input/input.txt'),
+  output: process.stdout,
+  terminal: false,
+});
 
-const trailing = 'Semicolon';
+const calories: number[] = [];
+let index = 0;
+let sumOfCalories = 0;
 
-const why = 'am I tabbed?';
+// Read all content
+rl.on('line', line => {
+  sumCalories(line);
+});
 
-export function doSomeStuff(
-  withThis: string,
-  andThat: string,
-  andThose: string[]
-) {
-  //function on one line
-  if (!andThose.length) {
-    return false;
+// When read is completed, do the calculations
+rl.on('close', () => {
+  doCalculations();
+});
+
+const sumCalories = (line: string) => {
+  sumOfCalories = sumOfCalories + +line; // Sum up the calories
+
+  // If we reach empty row, go to next elf
+  if (line.length === 0) {
+    calories[index] = sumOfCalories; // Store sum for current elf
+    index++; // Go to the next one
+    sumOfCalories = 0; // Reset counter
   }
-  console.log(withThis);
-  console.log(andThat);
-  console.dir(andThose);
-  return;
-}
-// TODO: more examples
+};
+
+const doCalculations = () => {
+  // Print the calories and find the largest sum
+  let highest = 0;
+  let elfIndex = 0;
+
+  for (let i = 0; i < calories.length; i++) {
+    if (calories[i] > highest) {
+      highest = calories[i];
+      elfIndex = i;
+    }
+  }
+
+  console.log(
+    `The Elf with the highest calories is ${elfIndex} with ${calories[elfIndex]} calories`
+  );
+};
