@@ -1,4 +1,4 @@
-export const rucksack = (input: string[]): number => {
+export const camp = (input: string[], part: number): number => {
 
   // print all lines
   input.forEach(line => {
